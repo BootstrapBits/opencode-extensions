@@ -41,7 +41,7 @@ function containsTriggerKeywords(text: string): boolean {
 async function readScratchpadSummary(
   projectDir: string
 ): Promise<string | null> {
-  const summaryPath = join(projectDir, "scratchpad", "scratchpad-summary.md")
+  const summaryPath = join(projectDir, ".scratchpad", "scratchpad-summary.md")
 
   try {
     await stat(summaryPath)
@@ -136,7 +136,7 @@ export const ScratchpadLoaderPlugin: Plugin = async ({
         if (content) {
           await client.tui.showToast({
             body: {
-              message: "Check scratchpad/scratchpad-summary.md for context",
+              message: "Check .scratchpad/scratchpad-summary.md for context",
               variant: "info",
             },
           })

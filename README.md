@@ -14,12 +14,24 @@ Automatically detects scratchpad context when users mention planning-related key
 ### Skills
 
 #### scratchpad-init
-Initialize a `scratchpad/` directory for cross-session context sharing between coding agents. Creates structured files for:
+Initialize a `.scratchpad/` directory for cross-session context sharing between coding agents. Creates structured files for:
 - **PLAN.md** - Project roadmap and milestones
 - **CONTEXT.md** - Architecture and background info
 - **IDEAS.md** - Future features and brainstorming
 - **STATUS.md** - Current work in progress
 - **scratchpad-summary.md** - Index file for agents
+
+Also adds `.scratchpad/` to `.gitignore` if the file exists.
+
+#### scratchpad-update
+Update scratchpad files after completing work sessions. Handles:
+- Updating STATUS.md with completed tasks and current progress
+- Updating PLAN.md with new milestones (asks user for approach)
+- Adding ideas to IDEAS.md from brainstorming sessions
+- Creating dated notes for significant work (`YYYY-MM-DD-topic-name.md`)
+- Refreshing scratchpad-summary.md with current state
+
+Always asks for user confirmation before making changes.
 
 #### subagent-orchestration
 Generate a multi-agent orchestration plan for complex refactoring or feature work. Guides through:
@@ -44,6 +56,7 @@ cp plugins/scratchpad-loader.ts ~/.config/opencode/plugin/
 
 # Skills
 cp -r skills/scratchpad-init ~/.config/opencode/skill/
+cp -r skills/scratchpad-update ~/.config/opencode/skill/
 cp -r skills/subagent-orchestration ~/.config/opencode/skill/
 
 # Commands
@@ -62,7 +75,8 @@ cd ~/.config/opencode && bun install
 
 1. In any project, ask the agent to "initialize scratchpad" to set up the directory
 2. The scratchpad-loader plugin will automatically detect when you mention planning keywords
-3. Agents will read `scratchpad/scratchpad-summary.md` for context
+3. Agents will read `.scratchpad/scratchpad-summary.md` for context
+4. After completing work, ask the agent to "update scratchpad" to sync changes
 
 ### Multi-Agent Orchestration
 

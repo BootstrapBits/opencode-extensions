@@ -5,7 +5,7 @@ description: Initialize a scratchpad directory for cross-session context sharing
 
 # Scratchpad Initialization Skill
 
-This skill sets up a `scratchpad/` directory in the current project for persistent context sharing between agent sessions. The scratchpad serves as a central hub where agents can read project plans, architectural context, ideas, and current status.
+This skill sets up a `.scratchpad/` directory in the current project for persistent context sharing between agent sessions. The scratchpad serves as a central hub where agents can read project plans, architectural context, ideas, and current status.
 
 ## When to Use
 
@@ -19,10 +19,10 @@ Use this skill when the user asks to:
 
 ### Step 1: Check and Create Directory Structure
 
-Create the `scratchpad/` directory in the project root if it doesn't exist:
+Create the `.scratchpad/` directory in the project root if it doesn't exist:
 
 ```
-scratchpad/
+.scratchpad/
 ├── PLAN.md                 # Current roadmap and milestones
 ├── CONTEXT.md              # Architecture, background, key decisions
 ├── IDEAS.md                # Brainstorming, future possibilities
@@ -34,7 +34,7 @@ scratchpad/
 
 Create each file with the following templates. These include realistic examples to demonstrate the expected format.
 
-#### scratchpad/PLAN.md
+#### .scratchpad/PLAN.md
 
 ```markdown
 # Project Plan
@@ -73,7 +73,7 @@ Create each file with the following templates. These include realistic examples 
 Add any planning notes, dependencies, or blockers here.
 ```
 
-#### scratchpad/CONTEXT.md
+#### .scratchpad/CONTEXT.md
 
 ```markdown
 # Project Context
@@ -122,7 +122,7 @@ Important domain concepts that agents should understand:
 Any relevant history about the project evolution.
 ```
 
-#### scratchpad/IDEAS.md
+#### .scratchpad/IDEAS.md
 
 ```markdown
 # Ideas
@@ -170,7 +170,7 @@ Ideas that aren't actionable yet but worth remembering:
 - Idea B
 ```
 
-#### scratchpad/STATUS.md
+#### .scratchpad/STATUS.md
 
 ```markdown
 # Current Status
@@ -215,7 +215,7 @@ Brief summary of what was done.
 Any relevant notes about current work state.
 ```
 
-#### scratchpad/scratchpad-summary.md
+#### .scratchpad/scratchpad-summary.md
 
 ```markdown
 # Scratchpad Summary
@@ -284,7 +284,7 @@ Check if `README.md` exists in the project root:
 
 ## Scratchpad (Agent Context)
 
-This project uses a `scratchpad/` directory for cross-session context sharing between AI coding agents.
+This project uses a `.scratchpad/` directory for cross-session context sharing between AI coding agents.
 
 ### What is the Scratchpad?
 
@@ -298,7 +298,7 @@ The scratchpad is a structured directory where agents can find:
 ### For AI Agents
 
 When working on planning or tasks:
-1. Read `scratchpad/scratchpad-summary.md` for an overview
+1. Read `.scratchpad/scratchpad-summary.md` for an overview
 2. Ask the user before reading additional files
 3. Update relevant files after completing work
 4. Keep `scratchpad-summary.md` in sync with changes
@@ -319,7 +319,19 @@ When working on planning or tasks:
 | Reference | Evergreen documentation |
 ```
 
-### Step 4: Confirm with User
+### Step 4: Update .gitignore (if exists)
+
+Check if `.gitignore` exists in the project root:
+
+- **If it exists**: Check if `.scratchpad/` is already in the file
+  - If not present, append the following lines to the end of the file:
+    ```
+    # AI agent scratchpad (cross-session context)
+    .scratchpad/
+    ```
+- **If it doesn't exist**: Do NOT create the file. The scratchpad will be tracked by git.
+
+### Step 5: Confirm with User
 
 After creating the files, summarize what was created and ask if the user wants to:
 1. Customize any of the template content
