@@ -1,0 +1,17 @@
+{
+  "name": "opencode-extensions",
+  "version": "1.0.0",
+  "description": "OpenCode plugins, skills, and commands for enhanced AI-assisted development",
+  "dependencies": {
+    "@opencode-ai/plugin": "1.0.223"
+  },
+  "keywords": [
+    "opencode",
+    "ai",
+    "plugins",
+    "skills",
+    "scratchpad",
+    "multi-agent"
+  ],
+  "license": "MIT"
+}
