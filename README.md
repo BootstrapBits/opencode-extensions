@@ -1,15 +1,46 @@
 # OpenCode Extensions
 
-A collection of plugins, skills, and commands for [OpenCode](https://opencode.ai) to enhance AI-assisted development workflows.
+A collection of plugins, skills, and commands for [OpenCode](https://opencode.ai) and other AI coding agents to enhance development workflows.
+
+[![Agent Skills Compatible](https://img.shields.io/badge/Agent%20Skills-Compatible-green)](https://agentskills.io)
+
+## Quick Install
+
+### Via skills-installer (Recommended)
+
+Install skills for any [Agent Skills compatible](https://agentskills.io) client:
+
+```bash
+# Install scratchpad skills
+npx skills-installer install @BootstrapBits/opencode-extensions/scratchpad-init
+npx skills-installer install @BootstrapBits/opencode-extensions/scratchpad-update
+
+# Install orchestration skill
+npx skills-installer install @BootstrapBits/opencode-extensions/subagent-orchestration
+```
+
+**Supported clients:** Claude Code, OpenCode, Cursor, VS Code, Codex, Amp Code, Goose, Letta, GitHub
+
+```bash
+# Example: Install for Cursor
+npx skills-installer install @BootstrapBits/opencode-extensions/scratchpad-init --client cursor
+
+# Example: Install for OpenCode
+npx skills-installer install @BootstrapBits/opencode-extensions/scratchpad-init --client opencode
+```
+
+### Via claude-plugins (Claude Code)
+
+```bash
+# Add as marketplace
+npx claude-plugins marketplace add BootstrapBits/opencode-extensions
+
+# Or install directly
+npx claude-plugins install @BootstrapBits/opencode-extensions/scratchpad-skills
+npx claude-plugins install @BootstrapBits/opencode-extensions/orchestration-skills
+```
 
 ## Contents
-
-### Plugins
-
-#### scratchpad-loader
-Automatically detects scratchpad context when users mention planning-related keywords. Shows TUI toast notifications when scratchpad context is available.
-
-**Triggers on:** "plan", "planning", "task", "tasks", "roadmap", "milestone", "status", "scratchpad"
 
 ### Skills
 
@@ -41,31 +72,39 @@ Generate a multi-agent orchestration plan for complex refactoring or feature wor
 4. Plan generation with dependency analysis
 5. Validation and finalization
 
-### Commands
+### Plugins (OpenCode-specific)
+
+#### scratchpad-loader
+Automatically detects scratchpad context when users mention planning-related keywords. Shows TUI toast notifications when scratchpad context is available.
+
+**Triggers on:** "plan", "planning", "task", "tasks", "roadmap", "milestone", "status", "scratchpad"
+
+### Commands (OpenCode-specific)
 
 #### /orchestrate
 Slash command to invoke the subagent-orchestration skill for creating multi-agent plans.
 
-## Installation
+## Manual Installation
 
-Copy the desired components to your OpenCode config directory:
+For OpenCode-specific components or manual setup:
 
 ```bash
-# Plugins
+# Clone the repo
+git clone https://github.com/BootstrapBits/opencode-extensions.git
+cd opencode-extensions
+
+# Copy skills (works with any Agent Skills compatible client)
+cp -r skills/scratchpad-init ~/.claude/skills/
+cp -r skills/scratchpad-update ~/.claude/skills/
+cp -r skills/subagent-orchestration ~/.claude/skills/
+
+# OpenCode-specific: Copy plugins
 cp plugins/scratchpad-loader.ts ~/.config/opencode/plugin/
 
-# Skills
-cp -r skills/scratchpad-init ~/.config/opencode/skill/
-cp -r skills/scratchpad-update ~/.config/opencode/skill/
-cp -r skills/subagent-orchestration ~/.config/opencode/skill/
-
-# Commands
+# OpenCode-specific: Copy commands
 cp commands/orchestrate.md ~/.config/opencode/command/
-```
 
-Then install dependencies:
-
-```bash
+# Install plugin dependencies (OpenCode only)
 cd ~/.config/opencode && bun install
 ```
 
@@ -84,6 +123,16 @@ cd ~/.config/opencode && bun install
 2. Provide your spec/plan document location
 3. Answer the interview questions (or use defaults)
 4. Review and execute the generated plan
+
+## Compatibility
+
+| Component | Claude Code | OpenCode | Cursor | VS Code | Other Agent Skills Clients |
+|-----------|-------------|----------|--------|---------|---------------------------|
+| scratchpad-init | Yes | Yes | Yes | Yes | Yes |
+| scratchpad-update | Yes | Yes | Yes | Yes | Yes |
+| subagent-orchestration | Yes | Yes | Yes | Yes | Yes |
+| scratchpad-loader plugin | No | Yes | No | No | No |
+| /orchestrate command | No | Yes | No | No | No |
 
 ## License
 
