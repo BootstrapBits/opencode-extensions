@@ -73,4 +73,4 @@ cd ~/.config/opencode && bun install
 
 ## License
 
-MIT
+O'Saasy License - see [LICENSE](LICENSE) for details.
