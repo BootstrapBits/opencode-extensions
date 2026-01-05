@@ -1,6 +1,6 @@
 {
   "name": "opencode-extensions",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Scratchpad and multi-agent orchestration extensions for OpenCode and other AI coding agents",
   "author": "BootstrapBits",
   "license": "O'Saasy",
@@ -15,11 +15,10 @@
   ],
   "plugins": [
     {
-      "name": "scratchpad-skills",
+      "name": "scratchpad-skill",
       "description": "Cross-session context sharing with scratchpad initialization and updates",
       "skills": [
-        "scratchpad-init",
-        "scratchpad-update"
+        "scratchpad"
       ],
       "tags": [
         "planning",
@@ -28,7 +27,7 @@
       ]
     },
     {
-      "name": "orchestration-skills",
+      "name": "orchestration-skill",
       "description": "Multi-agent orchestration planning for complex development work",
       "skills": [
         "subagent-orchestration"

@@ -11,9 +11,8 @@ A collection of plugins, skills, and commands for [OpenCode](https://opencode.ai
 Install skills for any [Agent Skills compatible](https://agentskills.io) client:
 
 ```bash
-# Install scratchpad skills
-npx skills-installer install @BootstrapBits/opencode-extensions/scratchpad-init
-npx skills-installer install @BootstrapBits/opencode-extensions/scratchpad-update
+# Install scratchpad skill (includes init + update operations)
+npx skills-installer install @BootstrapBits/opencode-extensions/scratchpad
 
 # Install orchestration skill
 npx skills-installer install @BootstrapBits/opencode-extensions/subagent-orchestration
@@ -23,10 +22,10 @@ npx skills-installer install @BootstrapBits/opencode-extensions/subagent-orchest
 
 ```bash
 # Example: Install for Cursor
-npx skills-installer install @BootstrapBits/opencode-extensions/scratchpad-init --client cursor
+npx skills-installer install @BootstrapBits/opencode-extensions/scratchpad --client cursor
 
 # Example: Install for OpenCode
-npx skills-installer install @BootstrapBits/opencode-extensions/scratchpad-init --client opencode
+npx skills-installer install @BootstrapBits/opencode-extensions/scratchpad --client opencode
 ```
 
 ### Via claude-plugins (Claude Code)
@@ -36,16 +35,19 @@ npx skills-installer install @BootstrapBits/opencode-extensions/scratchpad-init 
 npx claude-plugins marketplace add BootstrapBits/opencode-extensions
 
 # Or install directly
-npx claude-plugins install @BootstrapBits/opencode-extensions/scratchpad-skills
-npx claude-plugins install @BootstrapBits/opencode-extensions/orchestration-skills
+npx claude-plugins install @BootstrapBits/opencode-extensions/scratchpad-skill
+npx claude-plugins install @BootstrapBits/opencode-extensions/orchestration-skill
 ```
 
 ## Contents
 
 ### Skills
 
-#### scratchpad-init
-Initialize a `.scratchpad/` directory for cross-session context sharing between coding agents. Creates structured files for:
+#### scratchpad
+
+Manage a `.scratchpad/` directory for cross-session context sharing between coding agents. Supports two operations:
+
+**Initialize** - Set up a new scratchpad with structured files:
 - **PLAN.md** - Project roadmap and milestones
 - **CONTEXT.md** - Architecture and background info
 - **IDEAS.md** - Future features and brainstorming
@@ -54,17 +56,17 @@ Initialize a `.scratchpad/` directory for cross-session context sharing between 
 
 Also adds `.scratchpad/` to `.gitignore` if the file exists.
 
-#### scratchpad-update
-Update scratchpad files after completing work sessions. Handles:
-- Updating STATUS.md with completed tasks and current progress
-- Updating PLAN.md with new milestones (asks user for approach)
-- Adding ideas to IDEAS.md from brainstorming sessions
-- Creating dated notes for significant work (`YYYY-MM-DD-topic-name.md`)
-- Refreshing scratchpad-summary.md with current state
+**Update** - Sync scratchpad after completing work:
+- Updates STATUS.md with completed tasks and current progress
+- Updates PLAN.md with new milestones (asks user for approach)
+- Adds ideas to IDEAS.md from brainstorming sessions
+- Creates dated notes for significant work (`YYYY-MM-DD-topic-name.md`)
+- Refreshes scratchpad-summary.md with current state
 
 Always asks for user confirmation before making changes.
 
 #### subagent-orchestration
+
 Generate a multi-agent orchestration plan for complex refactoring or feature work. Guides through:
 1. Initial discovery and spec analysis
 2. Codebase exploration
@@ -75,6 +77,7 @@ Generate a multi-agent orchestration plan for complex refactoring or feature wor
 ### Plugins (OpenCode-specific)
 
 #### scratchpad-loader
+
 Automatically detects scratchpad context when users mention planning-related keywords. Shows TUI toast notifications when scratchpad context is available.
 
 **Triggers on:** "plan", "planning", "task", "tasks", "roadmap", "milestone", "status", "scratchpad"
@@ -82,6 +85,7 @@ Automatically detects scratchpad context when users mention planning-related key
 ### Commands (OpenCode-specific)
 
 #### /orchestrate
+
 Slash command to invoke the subagent-orchestration skill for creating multi-agent plans.
 
 ## Manual Installation
@@ -94,8 +98,7 @@ git clone https://github.com/BootstrapBits/opencode-extensions.git
 cd opencode-extensions
 
 # Copy skills (works with any Agent Skills compatible client)
-cp -r skills/scratchpad-init ~/.claude/skills/
-cp -r skills/scratchpad-update ~/.claude/skills/
+cp -r skills/scratchpad ~/.claude/skills/
 cp -r skills/subagent-orchestration ~/.claude/skills/
 
 # OpenCode-specific: Copy plugins
@@ -128,8 +131,7 @@ cd ~/.config/opencode && bun install
 
 | Component | Claude Code | OpenCode | Cursor | VS Code | Other Agent Skills Clients |
 |-----------|-------------|----------|--------|---------|---------------------------|
-| scratchpad-init | Yes | Yes | Yes | Yes | Yes |
-| scratchpad-update | Yes | Yes | Yes | Yes | Yes |
+| scratchpad | Yes | Yes | Yes | Yes | Yes |
 | subagent-orchestration | Yes | Yes | Yes | Yes | Yes |
 | scratchpad-loader plugin | No | Yes | No | No | No |
 | /orchestrate command | No | Yes | No | No | No |
