@@ -342,6 +342,104 @@ Review the current session to determine what type of work was completed:
 | Architecture decisions | Made significant technical choices | CONTEXT.md |
 | Mixed/Multiple | Combination of above | Multiple files |
 
+### Step 2.5: Content Extraction Guidelines
+
+Use these guidelines to identify what content from the session should go into each file.
+
+#### Signal Phrases Quick Reference
+
+Scan the session for these signal phrases to identify extractable content:
+
+| Target File | Signal Phrases to Look For |
+|-------------|---------------------------|
+| **STATUS.md** | "done", "finished", "completed", "fixed", "working now", "implemented", "tests pass", "merged", "blocked by", "waiting on", "working on", "currently" |
+| **PLAN.md** | "plan is", "we'll", "milestone", "phase", "goal", "priority", "deadline", "in scope", "out of scope", "next we need", "first", "then", "after that" |
+| **IDEAS.md** | "could also", "might", "what if", "future", "eventually", "nice to have", "experiment", "long-term", "stretch goal", "parking lot", "later we could" |
+| **CONTEXT.md** | "because", "reason is", "decided", "chose", "architecture", "pattern", "constraint", "tradeoff", "convention", "we went with", "the approach is" |
+
+#### Content Classification Rules
+
+**STATUS.md - What's happening NOW or JUST HAPPENED:**
+- Completed tasks: "Done!", "Finished X", "Implemented Y", "Fixed the bug"
+- Active work: "Working on...", "Currently implementing...", "Started X"
+- Progress updates: "Got X working, still need Y", "50% complete"
+- Blockers: "Blocked by...", "Waiting on...", "Can't proceed until..."
+- File changes: "Updated X.ts", "Created component Z", "Refactored Y"
+- Test results: "All tests passing", "Found 3 failing tests"
+
+**PLAN.md - COMMITTED future work:**
+- Milestone definitions: "First milestone is...", "For v1.0 we need..."
+- Task lists: "We need to: 1)... 2)... 3)..."
+- Priority ordering: "Most important is...", "Focus on X first"
+- Scope boundaries: "In scope: X, Y. Out of scope: Z"
+- Dependencies: "X must happen before Y", "This blocks that"
+- Timelines: "Target: end of Q1", "By next week"
+
+**IDEAS.md - UNCOMMITTED possibilities:**
+- Future possibilities: "In the future, we might...", "Long-term we could..."
+- Brainstorming: "What if we...", "We could also...", "Another approach..."
+- Improvements: "It would be better if...", "Should eventually..."
+- Deferred items: "Not now, but later...", "Park that for now"
+- Experiments: "Worth trying...", "Could experiment with..."
+
+**CONTEXT.md - DECISIONS and KNOWLEDGE:**
+- Decision rationale: "We chose X because...", "The reason for Y is..."
+- Architecture notes: "The architecture works by...", "Components interact via..."
+- Trade-offs: "The tradeoff is...", "We accepted X to get Y"
+- Domain knowledge: "In this domain, X means...", "Users expect Y"
+- Historical context: "Originally this was...", "We migrated from..."
+- Patterns: "The pattern we follow is...", "Our convention is..."
+
+#### Overlap Resolution
+
+When content could fit multiple files, use this decision tree:
+
+```
+Is it about something COMPLETED or IN PROGRESS right now?
+  YES → STATUS.md
+  NO  → Continue...
+
+Is it a COMMITTED plan with timeline or explicit priority?
+  YES → PLAN.md
+  NO  → Continue...
+
+Is it a DECISION made or ARCHITECTURAL KNOWLEDGE?
+  YES → CONTEXT.md
+  NO  → Continue...
+
+Is it SPECULATIVE or UNCOMMITTED?
+  YES → IDEAS.md
+  NO  → Ask user for clarification
+```
+
+**Common overlap scenarios:**
+- "We decided to build X because Y" → PLAN.md (the task) + CONTEXT.md (the rationale)
+- "Finished X, learned Y for next time" → STATUS.md (completion) + CONTEXT.md (learning)
+- "Working on X, could later enable Y" → STATUS.md (current) + IDEAS.md (future)
+
+#### What to Skip (Do NOT Extract)
+
+- Debugging chatter: "Let me check...", "Hmm, that's odd"
+- Temporary troubleshooting: "Try X... that didn't work... try Y"
+- Raw tool output (unless results are significant)
+- Clarifying questions: "Do you mean X or Y?"
+- Acknowledgments: "Got it", "Makes sense", "Okay"
+- Repeated commands without new results
+
+#### Extraction Example
+
+**Session fragment:**
+> "Let's add OAuth2 with Google. We chose it over custom auth because we don't
+> want to deal with password storage. Done! The OAuth flow is working now and
+> tests are passing. Later we could also add GitHub and Apple sign-in options."
+
+**Extractions:**
+| Content | Target File | Entry |
+|---------|-------------|-------|
+| OAuth2 implementation complete, tests passing | STATUS.md | Recently Completed entry |
+| Chose OAuth2 over custom auth (password storage concern) | CONTEXT.md | Key Decision entry |
+| GitHub and Apple sign-in options | IDEAS.md | Feature Idea entry |
+
 ### Step 3: Propose Updates to User
 
 Present a summary of intended changes and ask for confirmation:
