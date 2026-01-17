@@ -1,6 +1,6 @@
 ---
 name: scratchpad
-description: Manage a .scratchpad/ directory for cross-session context sharing between coding agents. Supports three operations - initialize (create new scratchpad), update (sync after work sessions), and consult (read summary and review context).
+description: Manage a .scratchpad/ directory for cross-session context sharing between coding agents. Supports four operations - initialize (create new scratchpad), update (sync after work sessions), consult (read summary and review context), and rebuild (regenerate summary from existing files).
 ---
 
 # Scratchpad Skill
@@ -9,13 +9,14 @@ This skill manages a `.scratchpad/` directory for persistent context sharing bet
 
 ## Operations
 
-This skill supports three operations:
+This skill supports four operations:
 
 | Operation | When to Use |
 |-----------|-------------|
 | **Initialize** | Set up a new scratchpad in a project |
 | **Update** | Sync scratchpad after completing work |
 | **Consult** | Review scratchpad context before starting work |
+| **Rebuild** | Regenerate scratchpad summary from existing files |
 
 Determine which operation to use based on:
 - If `.scratchpad/` doesn't exist → **Initialize**
@@ -23,6 +24,7 @@ Determine which operation to use based on:
 - If user explicitly asks to "init", "setup", or "create" scratchpad → **Initialize**
 - If user explicitly asks to "update", "sync", or "save" scratchpad → **Update**
 - If user explicitly asks to "consult", "check", "review", or "look at" scratchpad → **Consult**
+- If user explicitly asks to "rebuild", "regenerate", or "reindex" scratchpad → **Rebuild**
 
 ---
 
@@ -334,7 +336,15 @@ Read `.scratchpad/scratchpad-summary.md` to understand:
 
 ### Step 2: Analyze Session Work
 
-Review the current session to determine what type of work was completed:
+Review the **current conversation** and **existing scratchpad files** to determine what type of work was completed and what updates are needed.
+
+**IMPORTANT:** Only analyze content from:
+1. The current conversation (to find new content to add)
+2. The existing scratchpad files (to understand current state)
+
+Do NOT query external task management systems (like beads, GitHub issues, Jira, etc.) - the scratchpad captures discussion context, not task status from other tools. If the user wants to incorporate external task status, they will be asked in Step 2.6.
+
+Determine what type of work was completed:
 
 | Work Type | Indicators | Files to Update |
 |-----------|------------|-----------------|
@@ -441,6 +451,17 @@ Is it SPECULATIVE or UNCOMMITTED?
 | OAuth2 implementation complete, tests passing | STATUS.md | Recently Completed entry |
 | Chose OAuth2 over custom auth (password storage concern) | CONTEXT.md | Key Decision entry |
 | GitHub and Apple sign-in options | IDEAS.md | Feature Idea entry |
+
+### Step 2.6: Ask About External Task Systems
+
+After analyzing the conversation and scratchpad files, and before proposing updates, use the **AskUserQuestion tool** to ask if the user wants to also incorporate status from external task management systems.
+
+Present these options:
+- "No, just update from this conversation" (Recommended - default behavior)
+- "Yes, also check beads tasks"
+- "Yes, check other system" (let user specify)
+
+**Only query external systems (beads, GitHub issues, etc.) if the user explicitly confirms.** This keeps the scratchpad focused on conversation context by default.
 
 ### Step 3: Propose Updates to User
 
@@ -751,6 +772,113 @@ Based on the scratchpad:
 
 ---
 
+# Operation: Rebuild
+
+Use this operation when:
+- The user asks to "rebuild", "regenerate", or "reindex" the scratchpad
+- The scratchpad summary is out of sync with existing files
+- The user has manually cleaned up or reorganized scratchpad files
+- Files were added/removed outside of the normal update flow
+
+## Prerequisites
+
+The `.scratchpad/` directory must exist with at least some files. If the directory doesn't exist, suggest using **Initialize** instead.
+
+## Rebuild Steps
+
+### Step 1: Scan Existing Files
+
+List all files in the `.scratchpad/` directory to understand what exists:
+- Core documents (PLAN.md, CONTEXT.md, IDEAS.md, STATUS.md)
+- Dated notes (YYYY-MM-DD-*.md)
+- Any other markdown files
+
+### Step 2: Read and Analyze Each File
+
+For each file found (excluding scratchpad-summary.md):
+1. Read the file content
+2. Extract the status line (if present): `> Status: [status] | Last Updated: [date]`
+3. Generate a brief summary (1 sentence) of the file's contents
+4. Note the file's last modified date
+
+### Step 3: Delete Old Summary
+
+Delete the existing `.scratchpad/scratchpad-summary.md` file (if it exists).
+
+### Step 4: Generate New Summary
+
+Create a fresh `.scratchpad/scratchpad-summary.md` with:
+
+```markdown
+# Scratchpad Summary
+
+> This file helps agents quickly understand available context.
+> Read this first, then ask the user before reading additional files.
+>
+> Last Updated: [TODAY'S DATE]
+
+## How to Use This Scratchpad
+
+1. **Always read this summary first** when working on planning or tasks
+2. **Review the tables below** to understand what documentation exists
+3. **Ask the user** before reading full documents: "I see [file] might be relevant. Should I read it?"
+4. **Update scratchpad-summary.md** after modifying any scratchpad files
+
+## Core Documents
+
+| File | Summary | Status | Last Modified |
+|------|---------|--------|---------------|
+| [filename] | [generated summary] | [extracted status] | [date] |
+
+## Dated Notes
+
+| File | Summary | Status | Last Modified |
+|------|---------|--------|---------------|
+| [filename] | [generated summary] | [extracted status] | [date] |
+
+## Status Values
+
+- **Draft**: Initial ideas, not yet actionable
+- **Active**: Currently being worked on
+- **Implemented**: Completed and deployed
+- **Archived**: No longer relevant but kept for history
+- **Reference**: Evergreen documentation
+
+## Reading Guide
+
+When working on:
+- **Planning tasks**: Read PLAN.md, STATUS.md
+- **Architecture questions**: Read CONTEXT.md
+- **New features**: Read IDEAS.md and relevant dated notes
+- **Current work context**: Read STATUS.md first
+
+## Naming Convention
+
+- **Core docs**: `UPPERCASE.md` (PLAN, CONTEXT, IDEAS, STATUS)
+- **Dated notes**: `YYYY-MM-DD-topic-name.md` (e.g., `2026-01-03-api-redesign.md`)
+```
+
+### Step 5: Confirm Completion
+
+Report to user:
+
+```
+Scratchpad summary rebuilt successfully:
+
+**Files indexed:**
+- [X] core documents found
+- [Y] dated notes found
+
+**Summary:**
+- PLAN.md: [brief summary]
+- STATUS.md: [brief summary]
+- [etc.]
+
+The scratchpad-summary.md has been regenerated from existing files.
+```
+
+---
+
 ## Important Notes
 
 - Always replace `[DATE]` placeholders with the actual current date in `YYYY-MM-DD` format
@@ -760,3 +888,5 @@ Based on the scratchpad:
 - For Update operation: Always ask for user confirmation before making changes
 - For Update operation: Always ask how to handle PLAN.md updates when applicable
 - For Consult operation: Always use AskUserQuestion before reading files beyond the summary
+- For Update operation: Use AskUserQuestion to ask about external task systems before querying them
+- For Rebuild operation: This regenerates the summary from existing files, useful after manual cleanup
