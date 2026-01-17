@@ -1,6 +1,6 @@
 ---
 name: scratchpad
-description: Manage a .scratchpad/ directory for cross-session context sharing between coding agents. Supports two operations - initialize (create new scratchpad) and update (sync after work sessions).
+description: Manage a .scratchpad/ directory for cross-session context sharing between coding agents. Supports three operations - initialize (create new scratchpad), update (sync after work sessions), and consult (read summary and review context).
 ---
 
 # Scratchpad Skill
@@ -9,18 +9,20 @@ This skill manages a `.scratchpad/` directory for persistent context sharing bet
 
 ## Operations
 
-This skill supports two operations:
+This skill supports three operations:
 
 | Operation | When to Use |
 |-----------|-------------|
 | **Initialize** | Set up a new scratchpad in a project |
 | **Update** | Sync scratchpad after completing work |
+| **Consult** | Review scratchpad context before starting work |
 
 Determine which operation to use based on:
 - If `.scratchpad/` doesn't exist → **Initialize**
 - If `.scratchpad/` exists and user completed work → **Update**
 - If user explicitly asks to "init", "setup", or "create" scratchpad → **Initialize**
 - If user explicitly asks to "update", "sync", or "save" scratchpad → **Update**
+- If user explicitly asks to "consult", "check", "review", or "look at" scratchpad → **Consult**
 
 ---
 
@@ -662,6 +664,93 @@ The scratchpad now reflects the work completed in this session.
 
 ---
 
+# Operation: Consult
+
+Use this operation when:
+- The user asks to "consult", "check", "review", or "look at" the scratchpad
+- The user wants to understand the current project context before starting work
+- The user asks what's in the scratchpad or what the current status is
+
+## Prerequisites
+
+The `.scratchpad/` directory must already exist. If it doesn't, inform the user and suggest using the **Initialize** operation first.
+
+## Consult Steps
+
+### Step 1: Read Summary First
+
+Read `.scratchpad/scratchpad-summary.md` and present a brief overview to the user:
+
+```
+I've read your scratchpad summary. Here's what's available:
+
+**Core Documents:**
+- PLAN.md: [summary from table] (Last updated: [date])
+- CONTEXT.md: [summary from table] (Last updated: [date])
+- IDEAS.md: [summary from table] (Last updated: [date])
+- STATUS.md: [summary from table] (Last updated: [date])
+
+**Dated Notes:**
+- [List any dated notes with their summaries]
+
+[Include any other relevant info from the summary]
+```
+
+### Step 2: Identify Relevant Files
+
+Based on the summary tables and any context from the current conversation, identify which files might be relevant to the user's current task or question.
+
+Consider:
+- What is the user working on or asking about?
+- Which files contain related information based on their summaries?
+- Are there dated notes that might be particularly relevant?
+
+### Step 3: Ask User for Confirmation
+
+**IMPORTANT:** Use the AskUserQuestion tool to ask which files the user would like to read. Do NOT read additional scratchpad files without user confirmation.
+
+Present options based on what's available in the scratchpad:
+
+```
+Would you like me to read any of these files for more detail?
+```
+
+Options to present (based on what exists):
+- "STATUS.md" - If user is asking about current work
+- "PLAN.md" - If user is asking about roadmap or goals
+- "CONTEXT.md" - If user is asking about architecture or decisions
+- "IDEAS.md" - If user is asking about future features
+- Any relevant dated notes
+
+### Step 4: Read Requested Files
+
+Only read the files that the user explicitly confirms they want to see. For each file read:
+
+1. Read the file content
+2. Present a concise summary highlighting the most relevant parts
+3. Offer to read additional files if needed
+
+### Step 5: Summarize Findings
+
+After reading the requested files, provide a summary that:
+- Highlights information relevant to the user's current task
+- Notes any blockers or dependencies mentioned
+- Suggests next steps if appropriate
+
+```
+Based on the scratchpad:
+
+**Key Points:**
+- [Relevant finding 1]
+- [Relevant finding 2]
+
+**Current Status:** [Brief status summary if relevant]
+
+**Suggested Next Steps:** [If appropriate]
+```
+
+---
+
 ## Important Notes
 
 - Always replace `[DATE]` placeholders with the actual current date in `YYYY-MM-DD` format
@@ -670,3 +759,4 @@ The scratchpad now reflects the work completed in this session.
 - Dated notes should follow the `YYYY-MM-DD-topic-name.md` convention strictly
 - For Update operation: Always ask for user confirmation before making changes
 - For Update operation: Always ask how to handle PLAN.md updates when applicable
+- For Consult operation: Always use AskUserQuestion before reading files beyond the summary
