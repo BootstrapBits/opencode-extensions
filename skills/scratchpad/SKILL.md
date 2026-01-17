@@ -452,16 +452,18 @@ Is it SPECULATIVE or UNCOMMITTED?
 | Chose OAuth2 over custom auth (password storage concern) | CONTEXT.md | Key Decision entry |
 | GitHub and Apple sign-in options | IDEAS.md | Feature Idea entry |
 
-### Step 2.6: Ask About External Task Systems
+### Step 2.6: Ask About External Task Systems (Optional)
 
-After analyzing the conversation and scratchpad files, and before proposing updates, use the **AskUserQuestion tool** to ask if the user wants to also incorporate status from external task management systems.
+After analyzing the conversation and scratchpad files, if you detect that external task management systems might be relevant (e.g., user mentions beads, issues, or tasks), use the **AskUserQuestion tool** to ask if they want to incorporate that data.
 
-Present these options:
-- "No, just update from this conversation" (Recommended - default behavior)
-- "Yes, also check beads tasks"
-- "Yes, check other system" (let user specify)
+**NOTE:** This step is OPTIONAL. Only ask if external systems seem relevant. The Update operation should ALWAYS proceed to propose content updates to scratchpad files based on conversation analysis - do NOT offer a "just refresh dates" or "no changes" option.
 
-**Only query external systems (beads, GitHub issues, etc.) if the user explicitly confirms.** This keeps the scratchpad focused on conversation context by default.
+If asking about external systems, present these options:
+- "No, skip external systems" (Recommended) - Proceed with conversation-based updates only
+- "Yes, also check beads tasks" - Include beads task status in the update
+- "Yes, check other system" - Let user specify which system
+
+**IMPORTANT:** Regardless of the user's choice here, you MUST still propose content updates to scratchpad files (STATUS.md, PLAN.md, IDEAS.md, CONTEXT.md) based on your analysis. This question is ONLY about whether to query external systems for additional context.
 
 ### Step 3: Propose Updates to User
 
