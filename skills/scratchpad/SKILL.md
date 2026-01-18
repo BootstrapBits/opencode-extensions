@@ -328,21 +328,31 @@ The `.scratchpad/` directory must already exist. If it doesn't, use the **Initia
 
 ### Step 1: Read Current State
 
-Read `.scratchpad/scratchpad-summary.md` to understand:
-- What documentation currently exists
-- Current status of each file
-- Last modified dates
-- Any existing dated notes
+**First**, list all files in the `.scratchpad/` directory to see what exists.
 
-### Step 2: Analyze Session Work
+**Then**, read ALL scratchpad files (not just the summary):
+1. Read `scratchpad-summary.md` for the index overview
+2. Read each core document that exists (PLAN.md, STATUS.md, IDEAS.md, CONTEXT.md)
+3. Read any dated notes (YYYY-MM-DD-*.md files) or other markdown files
 
-Review the **current conversation** and **existing scratchpad files** to determine what type of work was completed and what updates are needed.
+Build a complete picture of:
+- What content exists in each file
+- Current status of tasks and milestones
+- Ideas that have been captured
+- Decisions and context that have been documented
+- Any content in dated notes that should be consolidated into core files
 
-**IMPORTANT:** Only analyze content from:
-1. The current conversation (to find new content to add)
-2. The existing scratchpad files (to understand current state)
+### Step 2: Analyze Content for Updates
 
-Do NOT query external task management systems (like beads, GitHub issues, Jira, etc.) - the scratchpad captures discussion context, not task status from other tools. If the user wants to incorporate external task status, they will be asked in Step 2.6.
+Review THREE sources to determine what updates are needed:
+
+1. **Current conversation** - New content to add from this session
+2. **Core scratchpad files** - Current state of PLAN.md, STATUS.md, IDEAS.md, CONTEXT.md
+3. **Dated notes and other files** - Content that may need consolidation into core files
+
+**Content Consolidation:** If dated notes or other scratchpad files contain content that belongs in core files (e.g., a plan in a dated note should be in PLAN.md), propose consolidating that content.
+
+**IMPORTANT:** Do NOT query external task management systems (like beads, GitHub issues, Jira, etc.) - the scratchpad captures discussion context, not task status from other tools. If the user wants to incorporate external task status, they will be asked in Step 2.6.
 
 Determine what type of work was completed:
 
@@ -465,22 +475,52 @@ If asking about external systems, present these options:
 
 **IMPORTANT:** Regardless of the user's choice here, you MUST still propose content updates to scratchpad files (STATUS.md, PLAN.md, IDEAS.md, CONTEXT.md) based on your analysis. This question is ONLY about whether to query external systems for additional context.
 
+### Step 2.7: Analyze Files for Consolidation
+
+For each non-core file in the scratchpad (dated notes, misc files):
+
+1. **Read the file content** (already done in Step 1)
+2. **Categorize the content** using the Content Classification Rules from Step 2.5:
+   - Plan content → should go in PLAN.md
+   - Status/progress content → should go in STATUS.md
+   - Ideas/brainstorming → should go in IDEAS.md
+   - Decisions/architecture → should go in CONTEXT.md
+   - Mixed content → split across appropriate files
+
+3. **Identify stale or completed items:**
+   - Tasks marked done that should move to "Recently Completed"
+   - Ideas that became plans
+   - Plans that were implemented
+
+4. **Propose consolidation:**
+   - Which content from dated notes should be merged into core files
+   - Which dated notes can be archived after consolidation
+   - How to update status of tasks/milestones
+
 ### Step 3: Propose Updates to User
 
 Present a summary of intended changes and ask for confirmation:
 
 ```
-Based on our session, I'd like to update the scratchpad:
+Based on my analysis of the scratchpad files and our session, I'd like to make these updates:
 
-**Files to update:**
-- STATUS.md: [brief summary of changes]
-- PLAN.md: [brief summary of changes] (if applicable)
-- IDEAS.md: [brief summary of changes] (if applicable)
+**Content to consolidate from other files:**
+- [dated-note.md]: [what content] → [target core file]
+- [other-file.md]: [what content] → [target core file]
 
-**New dated note to create:**
+**Core files to update:**
+- PLAN.md: [what changes - new plans, status updates, completed milestones]
+- STATUS.md: [what changes - completed tasks, new in-progress items, blockers]
+- IDEAS.md: [what changes - new ideas, ideas promoted to plans]
+- CONTEXT.md: [what changes - new decisions, architecture notes]
+
+**From this conversation:**
+- [New content to add from the session]
+
+**New dated note to create:** (if applicable)
 - YYYY-MM-DD-topic-name.md: [brief description of what it will contain]
 
-**scratchpad-summary.md:** Will be refreshed with updated dates and any new entries.
+**scratchpad-summary.md:** Will be refreshed with updated dates and summaries.
 
 Would you like me to proceed with these updates? [yes/no/modify]
 ```
